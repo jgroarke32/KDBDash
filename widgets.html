@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" />
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-debug.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.all.js"></script>
+
+    <style>
+        /* required file for gridstack to work */
+        @import "https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.min.css";
+
+        .grid-stack {
+            background: lightgoldenrodyellow;
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+            background-color: #18bc9c;
+        }
+    </style>
+
+    <style>
+
+        .card-body {
+            padding: 0;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            margin-bottom: 0;
+            background-color: rgba(0,0,0,.03);
+            border-bottom: 1px solid rgba(0,0,0,.125);
+        }
+
+        .grid-stack-item-content {
+            background: white;
+            color: #2c3e50;
+            font-family: 'Indie Flower';
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .panel-action {
+            list-style: none;
+            display: inline-block;
+            float: right;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+            .panel-action li {
+                display: inline-block;
+                color: #515d6e;
+                margin: 0 5px;
+                cursor: pointer;
+            }
+
+                .panel-action li a {
+                    color: #515d6e;
+                }
+
+        .grid-stack > .grid-stack-item > .grid-stack-item-content {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            left: 1px;
+            right: 1px;
+            bottom: 0;
+            width: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .fade.in {
+            opacity: 1;
+        }
+
+        .modal.in .modal-dialog {
+            -webkit-transform: translate(0, 0);
+            -o-transform: translate(0, 0);
+            transform: translate(0, 0);
+        }
+
+        .modal-backdrop.in {
+            opacity: 0.5;
+        }
+
+        .main-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 50px;
+            min-height: 100%;
+            width: 170px;
+            z-index: 810;
+            -webkit-transition: -webkit-transform .3s ease-in-out,width .3s ease-in-out;
+            -moz-transition: -moz-transform .3s ease-in-out,width .3s ease-in-out;
+            -o-transition: -o-transform .3s ease-in-out,width .3s ease-in-out;
+            transition: transform .3s ease-in-out,width .3s ease-in-out;
+            padding-top: 80px;
+        }
+
+        .content-wrapper, .main-footer {
+            -webkit-transition: -webkit-transform .6s ease-in-out,margin .6s ease-in-out;
+            -moz-transition: -moz-transform .3s ease-in-out,margin .3s ease-in-out;
+            -o-transition: -o-transform .3s ease-in-out,margin .3s ease-in-out;
+            transition: transform 1.1s ease-in-out,margin .75s ease-in-out;
+        }
+    </style>
+    <style>
+        .btn {
+            width: 100%;
+            height: 5%;
+            position: relative;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border: 3px solid #999999;
+            cursor: pointer;
+            transition: ease-out 0.5s;
+            -webkit-transition: ease-out 0.5s;
+            -moz-transition: ease-out 0.5s;
+        }
+
+            .btn.btn-border::after,
+            .btn.btn-border::before {
+                position: absolute;
+                content: "";
+                width: 0%;
+                height: 0%;
+                visibility: hidden;
+            }
+
+            .btn.btn-border::after {
+                bottom: -3px;
+                right: -3px;
+                border-left: 3px solid #222222;
+                border-bottom: 3px solid #222222;
+                transition: width .1s ease .1s, height .1s ease, visibility 0s .2s;
+            }
+
+            .btn.btn-border::before {
+                top: -3px;
+                left: -3px;
+                border-top: 3px solid #222222;
+                border-right: 3px solid #222222;
+                transition: width .1s ease .3s, height .1s ease .2s, visibility 0s .4s;
+            }
+
+            .btn.btn-border:hover {
+                animation: pulse 1s ease-out .4s;
+                color: #222222;
+            }
+
+                .btn.btn-border:hover::after,
+                .btn.btn-border:hover::before {
+                    width: calc(100% + 3px);
+                    height: calc(100% + 3px);
+                    visibility: visible;
+                    transition: width .1s ease .2s, height .1s ease .3s, visibility 0s .2s;
+                }
+
+                .btn.btn-border:hover::after {
+                    transition: width .1s ease .2s, height .1s ease .3s, visibility 0s .2s;
+                }
+
+                .btn.btn-border:hover::before {
+                    transition: width .1s ease, height .1s ease .1s;
+                }
+    </style>
+
+    <script>
+        function toggle() {
+            var item = $('#sidebar');
+            if (!$('#sidebar').hasClass('animated')) {
+                $('#sidebar').addClass('animated fadeOutLeft');
+                $("#content").css({ 'margin-left': "0px" });
+
+                $('#sidebar').on('animationend mozanimationend webkitAnimationEnd oAnimationEnd msanimationend', function () {
+                    $('#sidebar').hide();
+                    $('#sidebar').removeClass('fadeOutLeft');
+                });
+
+            }
+            else if ($('#sidebar').hasClass('fadeInLeft')) {
+                $('#sidebar').removeClass('fadeInLeft');
+                $('#sidebar').addClass('fadeOutLeft');
+                $("#content").css({ 'margin-left': "0px" });
+                $('#sidebar').on('animationend mozanimationend webkitAnimationEnd oAnimationEnd msanimationend', function () {
+                    $('#sidebar').hide();
+                    $('#sidebar').removeClass('fadeOutLeft');
+                });
+            }
+            else {
+                $('#sidebar').addClass('fadeInLeft'); $("#content").css({ 'margin-left': "170px" });
+                $('#sidebar').show();
+                $('#sidebar').on('animationend mozanimationend webkitAnimationEnd oAnimationEnd msanimationend', function () {
+                    $('#sidebar').show();
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+
+    <!--  <nav>  navbar content here  </nav> -->
+
+    <aside id="sidebar" class="main-sidebar z-depth-5 animated" style="display:none;">
+        <ul>
+            <li>
+                <span>Available Widgets</span>
+            </li>
+            <li>
+                <a class="btn btn-border" data-bind="click: addNewWidget">Add Widget</a>
+            </li>
+            <li>
+                <a class="btn btn-border" data-bind="click: addNewWidget">Add Widget2</a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="content-wrapper" id="content">
+        <a class="btn-floating btn-large waves-effect waves-light teal" onclick="toggle()"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            <p>A bunch of text</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        options = {};
+        M.Modal.init(elems, options);
+
+    });
+
+    ko.components.register('like-widget', {
+        viewModel: function (params) {
+            // Data: value is either null, 'like', or 'dislike'
+            this.chosenValue = ko.observable(params.value);
+
+            // Behaviors
+            this.like = function () { this.chosenValue('like'); }.bind(this);
+            this.dislike = function () { this.chosenValue('dislike'); }.bind(this);
+        },
+        template:
+            '<div class="like-or-dislike" data-bind="visible: !chosenValue()">\
+            <button data-bind="click: like">Like it</button>\
+            <button data-bind="click: dislike">Dislike it</button>\
+        </div>\
+        <div class="result" data-bind="visible: chosenValue">\
+            You <strong data-bind="text: chosenValue"></strong> it\
+        </div>'
+    });
+
+    ko.components.register('like-widget2', {
+        viewModel: function (params) {
+            // Data: value is either null, 'like', or 'dislike'
+            this.chosenValue = ko.observable(params.value);
+
+            // Behaviors
+            this.like = function () { this.chosenValue('like'); }.bind(this);
+            this.dislike = function () { this.chosenValue('dislike'); }.bind(this);
+        },
+        template:
+            '<div class="like-or-dislike" data-bind="visible: !chosenValue()">\
+            <button data-bind="click: like">Like it2</button>\
+            <button data-bind="click: dislike">Dislike it2</button>\
+        </div>\
+        <div class="result" data-bind="visible: chosenValue">\
+            You <strong data-bind="text: chosenValue"></strong> it2\
+        </div>'
+    });
+
+
+    ko.components.register('dashboard-grid', {
+        viewModel: {
+            createViewModel: function (controller, componentInfo) {
+                var ViewModel = function (controller, componentInfo) {
+                    var grid = null;
+
+                    this.widgets = controller.widgets;
+
+                    this.fadeInWidget = function (elem) {
+                        if (elem.nodeType === 1) {
+                            $(elem).hide().fadeIn()
+                        }
+                    }
+
+                    this.afterAddWidget = function (items) {
+                        if (!grid) {
+                            grid = GridStack.init({ auto: false, float: true });
+                        }
+
+
+                        grid.on('change', function (event, items) {
+                            console.log(items);
+                            items.forEach(function (item) {
+                                var widget = widgets.find(x => x.id == item.id);
+                                if (widget.x() !== item.x) { widget.x(item.x) }
+                                if (widget.y() !== item.y) { widget.y(item.y) }
+
+                            });
+
+
+                        });
+                        var item = items.find(function (i) { return i.nodeType == 1 });
+                        grid.addWidget(item);
+                        ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
+                            console.log(item);
+                            grid.removeWidget(item);
+                        });
+                    };
+                };
+
+                return new ViewModel(controller, componentInfo);
+            }
+        },
+        template:
+            [
+                '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget, afterAdd: fadeInWidget}">',
+                '   <div class="grid-stack-item z-depth-5" data-bind="attr: {\'data-gs-x\': x, \'data-gs-y\': y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position, \'data-gs-id\': $data.id}">',
+                '     <div class="grid-stack-item-content">',
+                ' <div class="card-header row" style = "padding-bottom: 0px;" >',
+                ' <div class="col s6">  <div class="left-align" data-bind="text: name"></div></div>',
+                ' <div class="col s6"> <ul class="panel-action right-align">',
+                ' <li><a class="fas fa-edit modal-trigger" href="#modal1"></a></li>',
+                '   <li><i class="fas fa-trash-alt remove-widget" data-bind="click: $root.deleteWidget"></i></li>',
+                '  </ul>   </div>  </div >',
+                '<div data-bind="component: { name: template, params: $data}"></div>',
+                '</div>   </div>    </div> </div> </div> ',
+                '   </div>',
+                '</div> '
+            ].join('')
+    });
+
+    var Controller = function (widgets) {
+        var self = this;
+
+        self.widgets = ko.observableArray(widgets);
+        self.currentWidget = ko.observable();
+
+        self.addNewWidget = function () {
+            self.widgets.push({
+                x: ko.observable(0),
+                y: ko.observable(0),
+                width: Math.floor(1 + 2 * Math.random()),
+                height: Math.floor(1 + 2 * Math.random()),
+                template: 'like-widget2',
+                value: '',
+                name: 'extra',
+                auto_position: true
+            });
+            return false;
+        };
+
+        self.deleteWidget = function (item) {
+            console.log(item);
+            self.widgets.remove(item);
+            return false;
+        };
+
+        self.showEditModal = function (widget) {
+            self.currentWidget(widget);
+            M.Modal.getInstance(document.querySelector('#modal1')).open();
+        }
+    };
+
+    var widgets = [
+        { x: ko.observable(2), y: ko.observable(4), width: 3, height: 2, id: '0', template: 'like-widget', value: '', name: 'first' },
+    ];
+
+    var controller = new Controller(widgets);
+    ko.applyBindings(controller);
+</script>
